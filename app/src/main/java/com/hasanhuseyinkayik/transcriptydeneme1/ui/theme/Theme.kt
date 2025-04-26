@@ -35,19 +35,15 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun TranscriptyDeneme1Theme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = true, // Dinamik renk desteği hala aktif
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            dynamicLightColorScheme(context) // Her zaman LightColorScheme kullanıyoruz
         }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        else -> LightColorScheme // Android 12'den önce, sadece LightColorScheme
     }
 
     MaterialTheme(
