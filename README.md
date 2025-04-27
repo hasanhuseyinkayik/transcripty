@@ -4,4 +4,4 @@
 
 26.04.2025 - Android textToSpeech API'a farklı dil seçenekleri (Almanca, Fransızca, İngilizce, Türkçe) eklendi.
 
-27.04.2025 - Artık butonlar doğru şekilde çalışıyor.
+27.04.2025 - Artık butonlar doğru şekilde çalışıyor. - TextToSpeech Dosya Yükleme özelliği eklendi, .txt uzantılı dosyalar yüklenebiliyor.
