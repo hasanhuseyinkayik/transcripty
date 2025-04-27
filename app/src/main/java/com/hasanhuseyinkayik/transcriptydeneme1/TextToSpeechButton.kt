@@ -32,7 +32,7 @@ fun TextToSpeechButton(navController: NavController) {
         )
 
         Button(
-            onClick = { /* Dosya Yükleme işlemi */ },
+            onClick = { navController.navigate("text_to_speech_file") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)

@@ -1,6 +1,7 @@
 package com.hasanhuseyinkayik.transcriptydeneme1
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -24,6 +25,9 @@ fun AppNavigation() {
         }
         composable("text_to_speech_write"){
             TextToSpeechScreen(navController = navController)
+        }
+        composable("text_to_speech_file"){
+            TextToSpeechFileUpload(navController = navController)
         }
     }
 }
