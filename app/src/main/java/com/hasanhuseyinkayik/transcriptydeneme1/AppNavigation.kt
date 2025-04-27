@@ -17,13 +17,13 @@ fun AppNavigation() {
             SpeechToTextScreen()
         }
         composable("text_to_speech"){
-            TextToSpeechScreen(navController = navController)
+            TextToSpeechButton(navController = navController)
         }
         composable("image_to_text"){
             ImageToTextScreen()
         }
-        composable("text_to_speech_upload"){
-            TextToSpeechUploadScreen()
+        composable("text_to_speech_write"){
+            TextToSpeechScreen(navController = navController)
         }
     }
 }
