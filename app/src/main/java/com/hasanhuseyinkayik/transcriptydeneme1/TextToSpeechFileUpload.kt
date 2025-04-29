@@ -74,7 +74,7 @@ fun TextToSpeechFileUpload(navController: NavHostController) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Dosyadan Metin Yükle",
+            text = "Metinden Sese Çevir",
             color = Color.Black,
             fontSize = 32.sp,
             modifier = Modifier.padding(bottom = 24.dp)
@@ -96,7 +96,7 @@ fun TextToSpeechFileUpload(navController: NavHostController) {
         OutlinedTextField(
             value = textInput,
             onValueChange = { textInput = it },
-            label = { Text("Yüklenen Yazı") },
+            label = { Text("Metin") },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp)
@@ -157,7 +157,7 @@ fun TextToSpeechFileUpload(navController: NavHostController) {
                 .fillMaxWidth()
                 .height(56.dp)
         ) {
-            Text(text = "Yazıyı Seslendir", color = Color.White, fontSize = 18.sp)
+            Text(text = "Metni Seslendir", color = Color.White, fontSize = 18.sp)
         }
     }
 

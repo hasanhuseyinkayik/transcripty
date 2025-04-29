@@ -1,3 +1,6 @@
+// Şu anda kullanılmıyor.
+
+
 package com.hasanhuseyinkayik.transcriptydeneme1
 
 import android.speech.tts.TextToSpeech

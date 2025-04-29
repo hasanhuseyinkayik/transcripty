@@ -1,3 +1,6 @@
+// Şu anda kullanılmıyor.
+
+
 package com.hasanhuseyinkayik.transcriptydeneme1
 
 import androidx.compose.foundation.layout.*
