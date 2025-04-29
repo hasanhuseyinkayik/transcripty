@@ -1,7 +1,4 @@
-// Şu anda kullanılmıyor.
-
-
-package com.hasanhuseyinkayik.transcriptydeneme1
+package com.hasanhuseyinkayik.transcriptydeneme1.mainMenu
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -14,11 +11,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
-import androidx.navigation.NavController
+import com.hasanhuseyinkayik.transcriptydeneme1.R
 import com.hasanhuseyinkayik.transcriptydeneme1.ui.theme.TranscriptyDeneme1Theme
 
 @Composable
-fun TextToSpeechButton(navController: NavController) {
+fun ImageToTextScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -27,7 +24,7 @@ fun TextToSpeechButton(navController: NavController) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Metinden Sese Çevir",
+            text = "Görselden Metne Çevir",
             color = Color.Black,
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
@@ -35,7 +32,7 @@ fun TextToSpeechButton(navController: NavController) {
         )
 
         Button(
-            onClick = { navController.navigate("text_to_speech_file") },
+            onClick = { /* Dosya Yükleme işlemi */ },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
@@ -61,7 +58,7 @@ fun TextToSpeechButton(navController: NavController) {
         }
 
         Button(
-            onClick = { navController.navigate("text_to_speech_write") },
+            onClick = { /* Ses kaydetme işlemi */ },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
@@ -72,26 +69,18 @@ fun TextToSpeechButton(navController: NavController) {
                 verticalArrangement = Arrangement.Center
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.pencil),
-                    contentDescription = "Yaz",
+                    painter = painterResource(id = R.drawable.camera),
+                    contentDescription = "Fotoğraf Çek",
                     tint = Color.White,
                     modifier = Modifier.size(40.dp)
                 )
                 Text(
-                    text = "Yaz",
+                    text = "Fotoğraf Çek",
                     color = Color.White,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun TextToSpeechButtonPreview() {
-    TranscriptyDeneme1Theme {
-        SpeechToTextScreen()
     }
 }

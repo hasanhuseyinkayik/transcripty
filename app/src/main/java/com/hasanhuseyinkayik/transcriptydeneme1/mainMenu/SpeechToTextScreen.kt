@@ -1,8 +1,9 @@
-package com.hasanhuseyinkayik.transcriptydeneme1
+package com.hasanhuseyinkayik.transcriptydeneme1.mainMenu
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -11,10 +12,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
+import androidx.navigation.NavHostController
+import com.hasanhuseyinkayik.transcriptydeneme1.R
 import com.hasanhuseyinkayik.transcriptydeneme1.ui.theme.TranscriptyDeneme1Theme
 
 @Composable
-fun ImageToTextScreen() {
+fun SpeechToTextScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -23,7 +26,7 @@ fun ImageToTextScreen() {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Görselden Metne Çevir",
+            text = "Sesten Metne Çevir",
             color = Color.Black,
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
@@ -57,7 +60,7 @@ fun ImageToTextScreen() {
         }
 
         Button(
-            onClick = { /* Ses kaydetme işlemi */ },
+            onClick = { navController.navigate("speech_to_text_record") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
@@ -68,13 +71,13 @@ fun ImageToTextScreen() {
                 verticalArrangement = Arrangement.Center
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.camera),
-                    contentDescription = "Fotoğraf Çek",
+                    painter = painterResource(id = R.drawable.mic),
+                    contentDescription = "Ses Kaydet",
                     tint = Color.White,
                     modifier = Modifier.size(40.dp)
                 )
                 Text(
-                    text = "Fotoğraf Çek",
+                    text = "Ses Kaydet",
                     color = Color.White,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
@@ -84,10 +87,3 @@ fun ImageToTextScreen() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ImageToTextScreenPreview() {
-    TranscriptyDeneme1Theme {
-        SpeechToTextScreen()
-    }
-}

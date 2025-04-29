@@ -1,9 +1,8 @@
-package com.hasanhuseyinkayik.transcriptydeneme1
+package com.hasanhuseyinkayik.transcriptydeneme1.mainMenu
 
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.provider.OpenableColumns
 import android.speech.tts.TextToSpeech
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -116,7 +115,7 @@ fun TextToSpeechFileUpload(navController: NavHostController) {
                     .fillMaxWidth()
                     .height(56.dp)
             ) {
-                Text(text = selectedLanguageName)
+                Text(text = "Dil: " + selectedLanguageName)
             }
             DropdownMenu(
                 expanded = expanded,

@@ -1,7 +1,7 @@
 // Şu anda kullanılmıyor.
 
 
-package com.hasanhuseyinkayik.transcriptydeneme1
+package com.hasanhuseyinkayik.transcriptydeneme1.unUsed
 
 import android.speech.tts.TextToSpeech
 import android.speech.tts.Voice

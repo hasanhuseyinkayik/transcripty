@@ -1,4 +1,4 @@
-package com.hasanhuseyinkayik.transcriptydeneme1
+package com.hasanhuseyinkayik.transcriptydeneme1.mainMenu
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

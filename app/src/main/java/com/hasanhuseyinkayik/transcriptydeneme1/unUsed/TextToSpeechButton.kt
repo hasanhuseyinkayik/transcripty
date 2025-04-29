@@ -1,4 +1,7 @@
-package com.hasanhuseyinkayik.transcriptydeneme1
+// Şu anda kullanılmıyor.
+
+
+package com.hasanhuseyinkayik.transcriptydeneme1.unUsed
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -11,10 +14,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
+import androidx.navigation.NavController
+import com.hasanhuseyinkayik.transcriptydeneme1.R
+import com.hasanhuseyinkayik.transcriptydeneme1.mainMenu.SpeechToTextScreen
 import com.hasanhuseyinkayik.transcriptydeneme1.ui.theme.TranscriptyDeneme1Theme
 
 @Composable
-fun SpeechToTextScreen() {
+fun TextToSpeechButton(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -23,7 +29,7 @@ fun SpeechToTextScreen() {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Sesten Metne Çevir",
+            text = "Metinden Sese Çevir",
             color = Color.Black,
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
@@ -31,7 +37,7 @@ fun SpeechToTextScreen() {
         )
 
         Button(
-            onClick = { /* Dosya Yükleme işlemi */ },
+            onClick = { navController.navigate("text_to_speech_file") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
@@ -57,7 +63,7 @@ fun SpeechToTextScreen() {
         }
 
         Button(
-            onClick = { /* Ses kaydetme işlemi */ },
+            onClick = { navController.navigate("text_to_speech_write") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
@@ -68,26 +74,18 @@ fun SpeechToTextScreen() {
                 verticalArrangement = Arrangement.Center
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.mic),
-                    contentDescription = "Ses Kaydet",
+                    painter = painterResource(id = R.drawable.pencil),
+                    contentDescription = "Yaz",
                     tint = Color.White,
                     modifier = Modifier.size(40.dp)
                 )
                 Text(
-                    text = "Ses Kaydet",
+                    text = "Yaz",
                     color = Color.White,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SpeechToTextScreenPreview() {
-    TranscriptyDeneme1Theme {
-        SpeechToTextScreen()
     }
 }
