@@ -7,3 +7,5 @@
 27.04.2025 - Artık butonlar doğru şekilde çalışıyor. - TextToSpeech Dosya Yükleme özelliği eklendi, .txt uzantılı dosyalar yüklenebiliyor.
 
 29.04.2025 - TextToSpeech yaz fonksiyonu ile dosya yükleme fonksiyonu tek bir sayfada birleştirildi.
+
+30.04.2025 - SpeechToText için deneme amaçlı SpeechRecognizer API'ı eklendi. Geliştirilecek.
