@@ -1,9 +1,11 @@
 package com.hasanhuseyinkayik.transcriptydeneme1
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.hasanhuseyinkayik.transcriptydeneme1.mainMenu.ImageToText
 import com.hasanhuseyinkayik.transcriptydeneme1.mainMenu.ImageToTextScreen
 import com.hasanhuseyinkayik.transcriptydeneme1.mainMenu.MainScreen
 import com.hasanhuseyinkayik.transcriptydeneme1.mainMenu.SpeechToText
@@ -28,7 +30,10 @@ fun AppNavigation() {
             TextToSpeechFileUpload(navController = navController)
         }
         composable("image_to_text"){
-            ImageToTextScreen()
+            ImageToTextScreen(navController = navController)
+        }
+        composable("uploadImageFile"){
+            ImageToText()
         }
     }
 }

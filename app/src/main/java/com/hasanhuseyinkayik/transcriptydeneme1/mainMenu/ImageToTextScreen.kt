@@ -11,11 +11,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
+import androidx.navigation.NavController
 import com.hasanhuseyinkayik.transcriptydeneme1.R
 import com.hasanhuseyinkayik.transcriptydeneme1.ui.theme.TranscriptyDeneme1Theme
 
 @Composable
-fun ImageToTextScreen() {
+fun ImageToTextScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -32,7 +33,7 @@ fun ImageToTextScreen() {
         )
 
         Button(
-            onClick = { /* Dosya Yükleme işlemi */ },
+            onClick = { navController.navigate("uploadImageFile")},
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
@@ -58,7 +59,7 @@ fun ImageToTextScreen() {
         }
 
         Button(
-            onClick = { /* Ses kaydetme işlemi */ },
+            onClick = { /* Fotoğraf çekme işlemi */ },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
