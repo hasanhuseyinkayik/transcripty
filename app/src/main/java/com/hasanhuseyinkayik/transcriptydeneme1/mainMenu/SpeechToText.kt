@@ -31,7 +31,7 @@ fun SpeechToText(navController: NavHostController) {
     val activity = context as? ComponentActivity
     var recognizedText by remember { mutableStateOf(TextFieldValue("")) }
     var isListening by remember { mutableStateOf(false) }
-    var selectedLanguage by remember { mutableStateOf("tr") }
+    var selectedLanguage by remember { mutableStateOf("en") }
 
     val languages = mapOf("Türkçe" to "tr", "İngilizce" to "en")
 
@@ -53,19 +53,12 @@ fun SpeechToText(navController: NavHostController) {
         SpeechRecognizer.createSpeechRecognizer(context)
     }
 
-    val recognizerIntent = remember(selectedLanguage) {
-        Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE, selectedLanguage)
-        }
-    }
-
     val tts = remember {
         TextToSpeech(context) {}
     }
 
     LaunchedEffect(selectedLanguage) {
-        val locale = Locale(selectedLanguage)
+        val locale = Locale(selectedLanguage, if (selectedLanguage == "tr") "TR" else "US")
         val result = tts.setLanguage(locale)
         if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
             Toast.makeText(context, "Seçilen dil desteklenmiyor.", Toast.LENGTH_SHORT).show()
@@ -159,6 +152,14 @@ fun SpeechToText(navController: NavHostController) {
                     permissionLauncher.launch(android.Manifest.permission.RECORD_AUDIO)
                 } else {
                     if (!isListening) {
+                        val locale = Locale(selectedLanguage, if (selectedLanguage == "tr") "TR" else "US")
+                        val recognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+                            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                            putExtra(RecognizerIntent.EXTRA_LANGUAGE, locale.toLanguageTag())
+                            putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, locale.toLanguageTag())
+                            putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE, locale.toLanguageTag())
+                        }
+
                         speechRecognizer.startListening(recognizerIntent)
                         isListening = true
                         Toast.makeText(context, "Dinleniyor...", Toast.LENGTH_SHORT).show()

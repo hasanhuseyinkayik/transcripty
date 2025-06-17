@@ -1,7 +1,11 @@
 package com.hasanhuseyinkayik.transcriptydeneme1.mainMenu
 
+import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.net.Uri
+import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -18,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import androidx.exifinterface.media.ExifInterface
 import java.io.InputStream
 
 @Composable
@@ -25,7 +30,26 @@ fun ImageToText() {
     val context = LocalContext.current
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     var recognizedText by remember { mutableStateOf("") }
+    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
     val scrollState = rememberScrollState()
+
+    fun rotateBitmapIfRequired(context: Context, bitmap: Bitmap, uri: Uri): Bitmap {
+        val inputStream = context.contentResolver.openInputStream(uri)
+        val exif = inputStream?.let { ExifInterface(it) }
+        val orientation = exif?.getAttributeInt(
+            ExifInterface.TAG_ORIENTATION,
+            ExifInterface.ORIENTATION_NORMAL
+        ) ?: ExifInterface.ORIENTATION_NORMAL
+
+        val matrix = Matrix()
+        when (orientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
+            ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
+            ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
+            else -> return bitmap
+        }
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+    }
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
@@ -33,17 +57,22 @@ fun ImageToText() {
             uri?.let {
                 selectedImageUri = it
                 val inputStream: InputStream? = context.contentResolver.openInputStream(it)
-                val bitmap = BitmapFactory.decodeStream(inputStream)
-                val image = InputImage.fromBitmap(bitmap, 0)
-                val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+                val originalBitmap = BitmapFactory.decodeStream(inputStream)
+                if (originalBitmap != null) {
+                    val rotatedBitmap = rotateBitmapIfRequired(context, originalBitmap, it)
+                    bitmap = rotatedBitmap
 
-                recognizer.process(image)
-                    .addOnSuccessListener { visionText ->
-                        recognizedText = visionText.text
-                    }
-                    .addOnFailureListener {
-                        recognizedText = "Metin tanınamadı: ${it.message}"
-                    }
+                    val image = InputImage.fromBitmap(rotatedBitmap, 0)
+                    val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+
+                    recognizer.process(image)
+                        .addOnSuccessListener { visionText ->
+                            recognizedText = visionText.text
+                        }
+                        .addOnFailureListener {
+                            recognizedText = "Metin tanınamadı: ${it.message}"
+                        }
+                }
             }
         }
     )
@@ -68,18 +97,14 @@ fun ImageToText() {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        selectedImageUri?.let { uri ->
-            val inputStream = context.contentResolver.openInputStream(uri)
-            val bitmap = BitmapFactory.decodeStream(inputStream)
-            bitmap?.let {
-                Image(
-                    bitmap = it.asImageBitmap(),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                )
-            }
+        bitmap?.let {
+            Image(
+                bitmap = it.asImageBitmap(),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+            )
         }
 
         Spacer(modifier = Modifier.height(24.dp))

@@ -2,7 +2,10 @@ package com.hasanhuseyinkayik.transcriptydeneme1.mainMenu
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.pdf.PdfRenderer
 import android.net.Uri
+import android.os.ParcelFileDescriptor
 import android.speech.tts.TextToSpeech
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -17,6 +20,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.*
@@ -40,7 +46,20 @@ fun TextToSpeechFileUpload(navController: NavHostController) {
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
-            textInput = readTextFromUri(context, it) ?: "Dosya okunamadı."
+            val mimeType = context.contentResolver.getType(it)
+            when (mimeType) {
+                "text/plain" -> {
+                    textInput = readTextFromUri(context, it) ?: "Dosya okunamadı."
+                }
+                "application/pdf" -> {
+                    readTextFromPdf(context, it) { result ->
+                        textInput = result ?: "PDF'den metin alınamadı."
+                    }
+                }
+                else -> {
+                    Toast.makeText(context, "Sadece .txt veya .pdf dosyaları destekleniyor.", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -52,8 +71,7 @@ fun TextToSpeechFileUpload(navController: NavHostController) {
                 val result = textToSpeech?.setLanguage(selectedLanguage)
                 if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                     Toast.makeText(context, "Dil desteklenmiyor. Lütfen dil paketini yükleyin.", Toast.LENGTH_LONG).show()
-                    val installIntent = Intent()
-                    installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
+                    val installIntent = Intent(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA)
                     context.startActivity(installIntent)
                 }
             }
@@ -81,7 +99,7 @@ fun TextToSpeechFileUpload(navController: NavHostController) {
 
         Button(
             onClick = {
-                launcher.launch("text/plain") // Sadece .txt dosyaları seçilecek
+                launcher.launch("*/*") // hem .txt hem .pdf seçilebilir
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -115,7 +133,7 @@ fun TextToSpeechFileUpload(navController: NavHostController) {
                     .fillMaxWidth()
                     .height(56.dp)
             ) {
-                Text(text = "Dil: " + selectedLanguageName)
+                Text(text = "Dil: $selectedLanguageName")
             }
             DropdownMenu(
                 expanded = expanded,
@@ -131,8 +149,7 @@ fun TextToSpeechFileUpload(navController: NavHostController) {
                             val result = textToSpeech?.setLanguage(locale)
                             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                                 Toast.makeText(context, "$name dili desteklenmiyor. Lütfen dil paketini yükleyin.", Toast.LENGTH_LONG).show()
-                                val installIntent = Intent()
-                                installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
+                                val installIntent = Intent(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA)
                                 context.startActivity(installIntent)
                             }
                         }
@@ -143,7 +160,6 @@ fun TextToSpeechFileUpload(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Seslendir Butonu
         Button(
             onClick = {
                 if (textInput.isNotBlank()) {
@@ -180,3 +196,45 @@ fun readTextFromUri(context: Context, uri: Uri): String? {
         null
     }
 }
+
+fun readTextFromPdf(context: Context, uri: Uri, onTextExtracted: (String?) -> Unit) {
+    try {
+        val parcelFileDescriptor = context.contentResolver.openFileDescriptor(uri, "r") ?: return
+        val renderer = PdfRenderer(parcelFileDescriptor)
+        val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+
+        val allTexts = mutableListOf<String>()
+        var processedPages = 0
+
+        for (i in 0 until renderer.pageCount) {
+            val page = renderer.openPage(i)
+            val bitmap = Bitmap.createBitmap(page.width, page.height, Bitmap.Config.ARGB_8888)
+            page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+            page.close()
+
+            val image = InputImage.fromBitmap(bitmap, 0)
+            recognizer.process(image)
+                .addOnSuccessListener { visionText ->
+                    allTexts.add(visionText.text)
+                    processedPages++
+                    if (processedPages == renderer.pageCount) {
+                        onTextExtracted(allTexts.joinToString("\n\n"))
+                        renderer.close()
+                        parcelFileDescriptor.close()
+                    }
+                }
+                .addOnFailureListener {
+                    processedPages++
+                    if (processedPages == renderer.pageCount) {
+                        onTextExtracted(allTexts.joinToString("\n\n"))
+                        renderer.close()
+                        parcelFileDescriptor.close()
+                    }
+                }
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+        onTextExtracted(null)
+    }
+}
+
