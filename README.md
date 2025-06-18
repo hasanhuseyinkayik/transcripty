@@ -1,3 +1,5 @@
+[transcripty mobil uygulaması](https://github.com/hasanhuseyinkayik/transcripty)'nin bir prototipidir.
+
 24.04.2025 - Basit bir proje taslağı oluşturuldu. Ekranlar ve butonlar geçici olarak tasarlandı.
 
 25.04.2025 - Deneme amaçlı Android textToSpeech API'ı ve yazma alanı eklendi. Geliştirilecek.
@@ -9,3 +11,5 @@
 29.04.2025 - TextToSpeech yaz fonksiyonu ile dosya yükleme fonksiyonu tek bir sayfada birleştirildi.
 
 30.04.2025 - SpeechToText için deneme amaçlı SpeechRecognizer API'ı eklendi. Geliştirilecek.
+
+9.05.2025 - ImageToText için deneme amaçlı Google ML Kit Text Recognition API (Optical Character Recognition - OCR) eklendi. Geliştirilecek.
