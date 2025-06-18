@@ -5,20 +5,25 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
-import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
@@ -82,40 +87,74 @@ fun ImageToText() {
             .fillMaxSize()
             .padding(24.dp)
             .verticalScroll(scrollState),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            "Görselden Metne",
-            style = MaterialTheme.typography.headlineMedium
+            text = "📷 Görselden Metne",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
         )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "Bir görsel seçin ve içindeki metni otomatik tanıyın.",
+            fontSize = 16.sp,
+            color = Color.Gray
+        )
+
         Spacer(modifier = Modifier.height(24.dp))
 
-        Button(onClick = { imagePickerLauncher.launch("image/*") }) {
-            Text("Görsel Seç")
+        Button(
+            onClick = { imagePickerLauncher.launch("image/*") },
+            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier
+                .height(50.dp)
+                .width(200.dp)
+        ) {
+            Text("Görsel Seç", fontSize = 16.sp)
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
         bitmap?.let {
-            Image(
-                bitmap = it.asImageBitmap(),
-                contentDescription = null,
+            Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)
-            )
+                    .height(250.dp),
+                shape = RoundedCornerShape(12.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+            ) {
+                Image(
+                    bitmap = it.asImageBitmap(),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
         if (recognizedText.isNotEmpty()) {
-            Text("Tanımlanan Metin:", style = MaterialTheme.typography.titleMedium)
-            Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = recognizedText,
-                style = MaterialTheme.typography.bodyLarge
+                text = "🔍 Tanımlanan Metin:",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
             )
+            Spacer(modifier = Modifier.height(8.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color(0xFFF2F2F2))
+                    .padding(12.dp)
+            ) {
+                Text(
+                    text = recognizedText,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
         }
     }
 }

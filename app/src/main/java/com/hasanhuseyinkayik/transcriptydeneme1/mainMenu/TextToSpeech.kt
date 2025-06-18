@@ -1,7 +1,7 @@
 // Şu anda kullanılmıyor.
 
 
-package com.hasanhuseyinkayik.transcriptydeneme1.unUsed
+package com.hasanhuseyinkayik.transcriptydeneme1.mainMenu
 
 import android.content.Intent
 import android.speech.tts.TextToSpeech

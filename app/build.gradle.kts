@@ -41,6 +41,7 @@ android {
 
 dependencies {
 
+    implementation ("androidx.compose.material:material-icons-extended:1.6.7")
     implementation ("com.google.mlkit:text-recognition:16.0.0")
     implementation("com.amazonaws:aws-android-sdk-polly:2.16.0")
     implementation ("com.amazonaws:aws-android-sdk-core:2.23.0")

@@ -24,11 +24,11 @@ fun AppNavigation() {
         composable("text_to_speech"){
             TextToSpeechFileUpload(navController = navController)
         }
-        composable("image_to_text"){
-            ImageToTextScreen(navController = navController)
+        composable("image_to_text") {
+            ImageToText()
         }
         composable("uploadImageFile"){
-            ImageToText()
+            ImageToTextScreen(navController = navController)
         }
     }
 }
