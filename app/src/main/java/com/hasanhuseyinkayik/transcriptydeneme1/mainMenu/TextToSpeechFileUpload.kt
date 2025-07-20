@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
 import android.net.Uri
-import android.os.ParcelFileDescriptor
 import android.speech.tts.TextToSpeech
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -32,8 +31,8 @@ fun TextToSpeechFileUpload(navController: NavHostController) {
     val context = LocalContext.current
     var textInput by remember { mutableStateOf("") }
     var textToSpeech by remember { mutableStateOf<TextToSpeech?>(null) }
-    var selectedLanguage by remember { mutableStateOf(Locale.ENGLISH) }
-    var selectedLanguageName by remember { mutableStateOf("İngilizce") }
+    var selectedLanguage by remember { mutableStateOf(Locale("tr", "TR")) }
+    var selectedLanguageName by remember { mutableStateOf("Türkçe") }
     var expanded by remember { mutableStateOf(false) }
     val showErrorToast = remember { mutableStateOf(false) }
 

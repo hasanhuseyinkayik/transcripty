@@ -31,7 +31,9 @@ fun SpeechToText(navController: NavHostController) {
     val activity = context as? ComponentActivity
     var recognizedText by remember { mutableStateOf(TextFieldValue("")) }
     var isListening by remember { mutableStateOf(false) }
-    var selectedLanguage by remember { mutableStateOf("en") }
+    var selectedLanguage by remember { mutableStateOf("tr") }
+    var ttsReady by remember { mutableStateOf(false) }
+    var tts by remember { mutableStateOf<TextToSpeech?>(null) }
 
     val languages = mapOf("Türkçe" to "tr", "İngilizce" to "en")
 
@@ -53,15 +55,19 @@ fun SpeechToText(navController: NavHostController) {
         SpeechRecognizer.createSpeechRecognizer(context)
     }
 
-    val tts = remember {
-        TextToSpeech(context) {}
+    LaunchedEffect(Unit) {
+        tts = TextToSpeech(context) { status ->
+            ttsReady = status == TextToSpeech.SUCCESS
+        }
     }
 
-    LaunchedEffect(selectedLanguage) {
-        val locale = Locale(selectedLanguage, if (selectedLanguage == "tr") "TR" else "US")
-        val result = tts.setLanguage(locale)
-        if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-            Toast.makeText(context, "Seçilen dil desteklenmiyor.", Toast.LENGTH_SHORT).show()
+    LaunchedEffect(selectedLanguage, ttsReady) {
+        if (ttsReady && tts != null) {
+            val locale = Locale(selectedLanguage, if (selectedLanguage == "tr") "TR" else "US")
+            val result = tts!!.setLanguage(locale)
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Toast.makeText(context, "Seçilen dil desteklenmiyor.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -107,8 +113,8 @@ fun SpeechToText(navController: NavHostController) {
 
         onDispose {
             speechRecognizer.destroy()
-            tts.stop()
-            tts.shutdown()
+            tts?.stop()
+            tts?.shutdown()
         }
     }
 
@@ -179,7 +185,9 @@ fun SpeechToText(navController: NavHostController) {
             onClick = {
                 val textToRead = recognizedText.text
                 if (textToRead.isNotBlank()) {
-                    tts.speak(textToRead, TextToSpeech.QUEUE_FLUSH, null, null)
+                    if (ttsReady && tts != null) {
+                        tts!!.speak(textToRead, TextToSpeech.QUEUE_FLUSH, null, null)
+                    }
                 }
             },
             modifier = Modifier
@@ -221,3 +229,4 @@ fun DropdownMenuBox(
         }
     }
 }
+
